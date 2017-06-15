@@ -11,20 +11,30 @@ $(document).ready(function() {
   PGanadas=0;
   Credito = 100;
   PTotales = 0;
+  PParciales = 0;
+  UserW = 0;
+  ComputerW = 0;
+
+  $("#AllIn").on("click",function () {
+    $("#apuesta").val(Credito);
+  });
+
+
+
 
   function random() {                     //Me devuelve el valor de la maquina
     let objeto;
     let element = Math.floor((Math.random() * 4) + 1);  //round redondea los valores del random que va desde 0 a 2
 
-    if ( element === 0){
+    if ( element === 1){
       objeto = "piedra";
-    }else if ( element === 1){
+    }else if ( element === 2){
         objeto = "papel";
-    }else if (element === 2){
-      objeto = "tijera";
     }else if (element === 3){
+      objeto = "tijera";
+    }else if (element === 4){
       objeto = "lagarto";
-    }else if (element === 4) {
+    }else if (element === 5) {
       objeto = "spock";
     }
     return objeto;
@@ -33,90 +43,117 @@ $(document).ready(function() {
 
   $("button").on("click",function () {       //Me devuelve el ID del boton clikeado
          clicked = $(this).attr("id");
-         console.log('Se cliqueo: '+clicked);                              //BORRAR LOG
-         comprar(clicked);
+         console.log('El usuario se lecciono: ' + clicked);
+         if (clicked != "AllIn"){
+           if ( ( $('#apuesta').val() != 0 ) && (Credito > 0) ) {
+              comparar(clicked);
+          }
+          else{
+                    alert("No puede apostar")
+                  }
+           }
+
        });
 
-  function comparar(clicked) {               //MEJORAR, SE REPITE MUCHO EL CODIGO Y VERIFICAR FUNCIONAMIENTO
+  function comparar(clicked) {               //
     objetoC = random();
-    console.log('En el random salio: ' +objetoC);
-            if (clicked == "piedra") {
-                if ( (jQuery.inArray(objetoC, gpiedra)) === 0 ){
-                    $("#Resultado").html("GANO");
-                    PGanadas = PGanadas+1;
-                    Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
-                }else if (objetoC == this) {
-                  $("#Resultado").html("EMPATO");
-                }else{
-                  $("#Resultado").html("PERDIO");
-                }
-            }
-            if (clicked === "papel") {
-                if (jQuery.inArray(objetoC, gpapel)){
-                    $("#Resultado").html("GANO");
-                  PGanadas = PGanadas+1;
-                  Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
-                }else if (objetoC == this) {
-                  $("#Resultado").html("EMPATO");
-                }else{
-                  $("#Resultado").html("PERDIO");
-            }}
-            if (clicked === "tijera") {
-                  if (jQuery.inArray(objetoC, gtijera)){
-                      $("#Resultado").html("GANO");
-                    PGanadas = PGanadas+1;
-                    Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
-                  }else if (objetoC == this) {
-                    $("#Resultado").html("EMPATO");
-                  }else{
-                    $("#Resultado").html("PERDIO")
-            }}
-            if (clicked === "lagarto") {
-                  if (jQuery.inArray(objetoC, glagarto)){
-                      $("#Resultado").html("GANO");
-                      PGanadas = PGanadas+1;
-                      Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
-                  }else if (objetoC == this) {
-                    $("#Resultado").html("EMPATO");
-                  }else{
-                    $("#Resultado").html("PERDIO");
-                }}
-            if (clicked === "spock") {
-                  if (jQuery.inArray(objetoC, gspock)){
-                    $("#Resultado").html("GANO");
-                    PGanadas = PGanadas+1;
-                    Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
-                  }else if (objetoC == this) {
-                    $("#Resultado").html("EMPATO");
-                  }else{
-                    $("#Resultado").html("PERDIO");
-                }}
+    console.log('El objeto que elijio la computadora es: ' + objetoC);
+        if (clicked == "piedra"){
 
-            PTotales = PTotales + 1;
-            $("#PGanadas").html('Partidas Ganadas: ' + PGanadas);
-            $("#Monedas").html('Monedas Restantes: ' + Credito);
-            $("#PTotales").html('Total Partidas Jugadas: ' + PTotales);
+                if ($("#myCheck").prop('checked',true)){
+                    torneo (objetoC,gpiedra,clicked);
+                }else {
+                    resultado (objetoC,gpiedra,clicked);
+                }
+        }
+        if (clicked == "papel"){
+
+                if ($("#myCheck").prop('checked',true)){
+                    torneo (objetoC,gpapel,clicked);
+                }else{
+                    resultado (objetoC,gpapel,clicked);
+                }
+        }
+        if (clicked == "tijera") {
+
+                if ($("#myCheck").prop('checked',true)){
+                  torneo (objetoC,gtijera,clicked);
+                }else{
+                  resultado (objetoC,gtijera,clicked);
+                }
+        }
+        if (clicked == "lagarto"){
+
+                if ($("#myCheck").prop('checked',true)){
+                  torneo (objetoC,glagarto,clicked);
+                }else{
+                    resultado (objetoC,glagarto,clicked);
+                }
+        }
+        if (clicked == "spock"){
+
+                if ($("#myCheck").prop('checked',true)){
+                  torneo (objetoC,gspock,clicked);
+                }else{
+                  resultado (objetoC,gspock,clicked);
+                }
+        }
+
     };
 
-  $("#AllIn").on("click",function () {
-    $("#apuesta").val(Credito);
-  });
+  function resultado(objetoC,arr,clicked) {
 
-  $("#myCheck").on("click",function () {
-      if ($("#myCheck").prop('checked',true)){
-        rondas = $("TorneoRondas").val();
-        EmpezarTorneo(rondas);
-      }
-  })
+        if ( (jQuery.inArray(objetoC, arr)) == 0 ){
+            $("#Resultado").html("GANO");
+            PGanadas = PGanadas+1;
+            Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
+        }else if (objetoC == clicked) {
+          $("#Resultado").html("EMPATO");
+        }else{
+          $("#Resultado").html("PERDIO");
+          Credito = Credito - ( parseInt( $("#apuesta").val() ) );
+        }
 
-  function EmpezarTorneo(rondas) {
-      for (var i = 0; i < rondas; i++) {
-        $("button").on("click",function () {       //Me devuelve el ID del boton clikeado
-               clicked = $(this).attr("id");
-             });
-        comparar(clicked);
+       PTotales = PTotales + 1;
+       $("#PGanadas").html('Partidas Ganadas: ' + PGanadas);
+       $("#Monedas").html('Monedas Restantes: ' + Credito);
+       $("#PTotales").html('Total Partidas Jugadas: ' + PTotales);
+
+  };
+
+  function torneo(objetoC,arr,clicked) {
+    if ( (jQuery.inArray(objetoC, arr)) == 0 ){
+        $("#Resultado").html("GANO");
+        PGanadas = PGanadas+1;
+        Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
+        UserW = UserW +1;
+    }else if (objetoC == clicked) {
+      $("#Resultado").html("EMPATO");
+    }else{
+      $("#Resultado").html("PERDIO");
+      Credito = Credito - ( parseInt( $("#apuesta").val() ) );
+      ComputerW = ComputerW +1;
+    }
+
+    PParciales = PParciales + 1;
+    if ( PParciales == $("#TorneoRondas").val() ){
+      if (ComputerW > UserW){
+          $("#ResultadoTorneo").html("USTED PERDIO EL TORNEO");
+          Credito = Credito - ( parseInt( $("#apuesta").val() ) );
       }
+      else {
+        $("#ResultadoTorneo").html("USTED GANO EL TORNEO");
+        Credito = Credito + ( parseInt( $("#apuesta").val() * 2 ) );
+      }
+      PParciales = 0;
+      ComputerW =0;
+      UserW = 0;
+    }
   }
+
+
+
+
 
 
 });
