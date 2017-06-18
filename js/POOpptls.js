@@ -43,11 +43,13 @@ $(document).ready(function(){
           this.gpiedra = ['lagarto','tijera'];               //armas a las que la piedra le gana
           this.gpapel = ['piedra','spock'];                  //armas a las que el papel le gana
           this.gtijera = ['papel','lagarto'];               // armas a las que la tijera le gana
-          this.gspock = ['piedra','tijera'];                 // armas a las que el spock le gana
           this.glagarto = ['spock','papel'];                 // armas a las que el lagarto le gana
+          this.gspock = ['piedra','tijera'];                 // armas a las que el spock le gana
           this.PTorneo = PTorneo;
           this.PTotales = 0;
           this.PParciales = 0;
+          this.resultadoT = "Empezo El Torneo!";
+          this.resultadoN = 0;
         }
 
         contadorPartidas(){
@@ -101,41 +103,38 @@ $(document).ready(function(){
         }
 
         GPartidaTorneo(JugadorM,arr,JugadorU){
-              if ( (jQuery.inArray(JugadorU.seleccion, arr) ) == 0 ){
-                  this.resultado = "Gano";
-                  this.PParciales =   this.PParciales + 1;
-
+              if ( ( JugadorM.seleccion == arr[0] ) || (JugadorM.seleccion == arr[1]) ){
+                  this.resultadoN = "Gano";
               }else if (JugadorM.seleccion == JugadorU.seleccion) {
-                this.resultado = "Empataron";
+                this.resultadoN = "Empato";
               }else{
-                this.resultado = "Perdio";
+                this.resultadoN = "Perdio";
               }
 
               if (this.PTorneo == this.PParciales ){
                     JugadorU.pierde();   //por apostar pierde el valor de lo que aposto
-                    if (this.PParciales <= (this.PTorneo/2)){           //Verificar condicion
-                      this.resultado = "Gano el Torneo";
-
+                    if (this.PParciales < (this.PTorneo/2)){           //Verificar condicion
+                      this.resultadoT = "Gano el Torneo";
                       JugadorU.recibe();
                     }
                     else {
-                      this.resultado = "Usted perdio el Torneo"
-
+                      this.resultadoT = "Usted perdio el Torneo"
                     }
               this.PParciales = 0;
-              this.PTorneo = 0;
               this.contadorPartidas();
               }
+
+              this.PParciales =   this.PParciales + 1;
         }
 
         GPartidaNormal(JugadorM,arr,JugadorU){
-              if ( (jQuery.inArray(JugadorU.seleccion, arr) ) == 0 ){ //VERIFICAR CONDICION DEL ORTO
-                  this.resultado = "Gano";
+              if ( ( JugadorM.seleccion == arr[0] ) || (JugadorM.seleccion == arr[1]) ){
+                  this.resultadoN = "Gano";
                   JugadorU.recibe();
               }else if (JugadorM.seleccion == JugadorU.seleccion) {
-                this.resultado = "Empataron";
+                this.resultadoN = "Empato";
               }else{
-                this.resultado = "Perdio";
+                this.resultadoN = "Perdio";
                 // JugadorU.pierde();       Como se descuenta cuando apuesta no le tengo que quitar mas
               }
           this.contadorPartidas();
@@ -166,19 +165,19 @@ $(document).ready(function(){
        John.credito = 100;
        John.name = "John";
        let Mac = new JugadorPC ();
-       let JuegoTorneo = new Juego( $("#TorneoRondas").val() );
+       let NumeroRondas = $("#TorneoRondas").val() ;
+       let JuegoTorneo = new Juego( NumeroRondas );
        let JuegoNormal = new Juego(0);
+      $("#TorneoRondas").on("change",function () {
+         NumeroRondas = $("#TorneoRondas").val() ;
+        JuegoTorneo = new Juego( NumeroRondas );    // VERIFICAR ESTO
+      });
 
   // Fin de definicion de variables --------------------------
 
-  $("#coins").on("click",function () {
-    John.apuesta(100);
-    John.recibe();
-  });
-
-  $("#AllIn").on("click",function () {
+    $("#AllIn").on("click",function () {
        $('#apuesta').val(John.credito)
-  });
+    });
 
   $("button").on("click",function () {       //Me devuelve el ID del boton clikeado
          John.Seleccionar( $(this).attr("id") );
@@ -197,13 +196,16 @@ $(document).ready(function(){
 
   function EmpiezaJuego() {
       if ( $("#myCheck").prop('checked') ){
+          $("#myCheck").hide();
           JuegoTorneo.desicion(true,Mac,John);
-          $('#Resultado').html(JuegoTorneo.resultado  + " el Torneo al mejor de " + JuegoTorneo.PTorneo );
+          $("#myCheck").show();
+          $('#Resultado').html("En la  " + JuegoTorneo.PParciales + " ronda usted: " + JuegoTorneo.resultadoN);
+          $('#ResultadoTorneo').html(JuegoTorneo.resultadoT);
       }
     else {
           John.pierde();   //por apostar pierde el valor de lo que aposto
           JuegoNormal.desicion(false,Mac,John);
-          $('#ResultadoTorneo').html(JuegoNormal.resultado);
+          $('#Resultado').html(JuegoNormal.resultadoN);
     }
 
     $("#ObjetoPc").html('La maquina lecciono: ' + Mac.seleccion);
