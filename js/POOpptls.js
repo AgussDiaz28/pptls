@@ -48,7 +48,7 @@ $(document).ready(function(){
           this.PTorneo = PTorneo;
           this.PTotales = 0;
           this.PParciales = 0;
-          this.resultadoT = "Empezo El Torneo!";
+          this.resultadoT = "Estamos en Modo Torneo";
           this.resultadoN = 0;
         }
 
@@ -103,6 +103,7 @@ $(document).ready(function(){
         }
 
         GPartidaTorneo(JugadorM,arr,JugadorU){
+
               if ( ( JugadorM.seleccion == arr[0] ) || (JugadorM.seleccion == arr[1]) ){
                   this.resultadoN = "Gano";
               }else if (JugadorM.seleccion == JugadorU.seleccion) {
@@ -123,8 +124,8 @@ $(document).ready(function(){
               this.PParciales = 0;
               this.contadorPartidas();
               }
-
               this.PParciales =   this.PParciales + 1;
+
         }
 
         GPartidaNormal(JugadorM,arr,JugadorU){
@@ -159,6 +160,11 @@ $(document).ready(function(){
     return element;
   }
 
+  function print(SeleccionU,SeleccionM) {
+      $("#ObjetoUsuario").attr('src',  "images/" + SeleccionU + ".png" );
+      $("#ObjetoPc").attr('src',  "images/" + SeleccionM + ".png" );
+  }
+
   // Defino variables --------------------------
 
        let John = new JugadorUsuario ();
@@ -172,6 +178,7 @@ $(document).ready(function(){
          NumeroRondas = $("#TorneoRondas").val() ;
         JuegoTorneo = new Juego( NumeroRondas );    // VERIFICAR ESTO
       });
+      $(".resultados").hide();
 
   // Fin de definicion de variables --------------------------
 
@@ -179,11 +186,10 @@ $(document).ready(function(){
        $('#apuesta').val(John.credito)
     });
 
-  $("button").on("click",function () {       //Me devuelve el ID del boton clikeado
+   $("img").on("click",function () {       //Me devuelve el ID del boton clikeado
          John.Seleccionar( $(this).attr("id") );
          John.apuesta( $('#apuesta').val() );
-
-         if (John.seleccion != "AllIn" && (John.seleccion != "coins") ){
+         if (John.seleccion != "ObjetoUsuario" && (John.seleccion != "ObjetoPc") ){
              if ( ( John.vapuesta > 0 ) && ( John.credito > 0) ) {   //Si aposto mas de 0 y le queda saldo
                Mac.Seleccionar();
                EmpiezaJuego(John);                                       // empieza el juego
@@ -196,22 +202,29 @@ $(document).ready(function(){
 
   function EmpiezaJuego() {
       if ( $("#myCheck").prop('checked') ){
-          $("#myCheck").hide();
-          JuegoTorneo.desicion(true,Mac,John);
-          $("#myCheck").show();
-          $('#Resultado').html("En la  " + JuegoTorneo.PParciales + " ronda usted: " + JuegoTorneo.resultadoN);
-          $('#ResultadoTorneo').html(JuegoTorneo.resultadoT);
+            $("#myCheck").hide();
+            $("#TorneoRondas").prop('disabled', true);
+            JuegoTorneo.desicion(true,Mac,John);
+            if (JuegoTorneo.PParciales == NumeroRondas ){
+                $("#myCheck").show();
+                $("#TorneoRondas").prop('disabled', false);
+
+            };
+            $('#ResultadoTorneo').html(JuegoTorneo.resultadoT);
+            $(".resultados").show();
+            $('#Resultado').html("En la  " + JuegoTorneo.PParciales + " ronda del torneo usted: " + JuegoTorneo.resultadoN);
+
       }
     else {
           John.pierde();   //por apostar pierde el valor de lo que aposto
           JuegoNormal.desicion(false,Mac,John);
+          $(".resultados").show();
           $('#Resultado').html(JuegoNormal.resultadoN);
     }
 
-    $("#ObjetoPc").html('La maquina lecciono: ' + Mac.seleccion);
-    $('#ObjetoUsuario').html( John.name + ' lecciono: ' + John.seleccion);
-    $('#Monedas').html('Las monedas restantes de ' + John.name + ' son: ' + John.credito);
-    $("#PTotales").html('Total de partidas Jugadas: ' + JuegoNormal.PTotales );
+    print(John.seleccion,Mac.seleccion);
+    $('#Monedas').html('MONEDAS RESTANTES: ' + John.credito);
+    $("#PTotales").html('PARTIDAS JUGADAS: ' + JuegoNormal.PTotales );
   }
 
 

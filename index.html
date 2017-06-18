@@ -9,25 +9,48 @@
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
   <body>
-
-        <button type="button" name="button1" id="piedra">Piedra</button>
-        <button type="button" name="button2" id="papel">Papel</button>
-        <button type="button" name="button3" id="tijera">Tijera</button>
-        <button type="button" name="button4" id="lagarto">Lagarto</button>
-        <button type="button" name="button5" id="spock">Spock</button>
-        Apuesta de: <input type="text" id="apuesta" name="" value="5">
-        Hacer <button type="button" name="button" id="AllIn"> All In </button>
-        <input type="checkbox" id="myCheck"> Torneo de
-        <input type="text" name="" value="10" id="TorneoRondas"> Partidas
-
-
+        <h1>Selecciones su arma</h1>
+        <hr>
+        <div class="armas">
+          <img src="images/piedra.png" alt="piedra" id="piedra" />
+          <img src="images/papel.png" alt="papel"  id="papel"/>
+          <img src="images/tijera.png" alt="tijera" id="tijera" />
+          <img src="images/spock.png" alt="spock" id="spock" />
+          <img src="images/lagarto.png" alt="lagarto" id="lagarto" />
+        </div>
+        <hr>
+        <div class="">
+          <h2>Configure La partida</h2>
+          Apuesta de: <input type="text" id="apuesta" name="" value="5">
+          <br>
+          Hacer <button type="button" name="button" id="AllIn"> All In </button>
+          <br>
+          Jugar Torneo: <input type="checkbox" id="myCheck">
+          <br>
+          Ingrese la longitud del Torneo: <input type="text" name="" value="10" id="TorneoRondas">
+        </div>
+        <hr>
+        <h2 class="resultados">Resultados:</h2>
         <p id="PGanadas"></p>
-        <p id="Resultado"></p>
-        <p id="ResultadoTorneo"></p>
-        <p id="Monedas"></p>
+        <h2 id="ResultadoTorneo"></h2>
+        <h3 id="Resultado"></h3>
+        <h3 id="Monedas"></h3>
         <p id="PTotales"></p>
-        <div id="ObjetoPc"></div>
-        <div id="ObjetoUsuario"></div>
+          <hr>
+        <div class="">
+						<div class="weapons">
+							<img id="ObjetoUsuario" src="images/user.png"/>
+							<p>User Weapon</p>
+						</div>
+
+						<div class="weapons">
+							<img id="ObjetoPc" src="images/computer.png"/>
+							<p>Computer Weapon</p>
+						</div>
+
+				</div>
+
+
 
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <script type="text/javascript" src="js/POOpptls.js"> </script>
