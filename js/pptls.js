@@ -56,7 +56,7 @@ $(document).ready(function() {
 
        });
 
-  function comparar(clicked) {               //
+  function comparar(clicked) {               
 
     objetoC = random();
     $('#ObjetoPc').html('El objeto que elijio la computadora es: ' + objetoC)

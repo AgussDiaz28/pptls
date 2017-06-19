@@ -103,29 +103,28 @@ $(document).ready(function(){
         }
 
         GPartidaTorneo(JugadorM,arr,JugadorU){
-
-              if ( ( JugadorM.seleccion == arr[0] ) || (JugadorM.seleccion == arr[1]) ){
+          if ( ( JugadorM.seleccion == arr[0] ) || (JugadorM.seleccion == arr[1]) ){
                   this.resultadoN = "Gano";
               }else if (JugadorM.seleccion == JugadorU.seleccion) {
                 this.resultadoN = "Empato";
               }else{
                 this.resultadoN = "Perdio";
               }
-
-              if (this.PTorneo == this.PParciales ){
-                    JugadorU.pierde();   //por apostar pierde el valor de lo que aposto
-                    if (this.PParciales < (this.PTorneo/2)){           //Verificar condicion
-                      this.resultadoT = "Gano el Torneo";
-                      JugadorU.recibe();
-                    }
-                    else {
-                      this.resultadoT = "Usted perdio el Torneo"
-                    }
-              this.PParciales = 0;
-              this.contadorPartidas();
-              }
               this.PParciales =   this.PParciales + 1;
 
+            if (this.PTorneo  ==  this.PParciales ){
+                  JugadorU.pierde();   //por apostar pierde el valor de lo que aposto
+                  if (this.PParciales < (this.PTorneo/2)){           //Verificar condicion
+                    this.resultadoT = "Gano el Torneo";
+                    JugadorU.recibe();
+                  }
+                  else {
+                    this.resultadoT = "Usted perdio el Torneo"
+                  }
+
+                  this.contadorPartidas();
+                  this.PParciales = this.PTorneo;
+            }
         }
 
         GPartidaNormal(JugadorM,arr,JugadorU){
@@ -208,7 +207,7 @@ $(document).ready(function(){
             if (JuegoTorneo.PParciales == NumeroRondas ){
                 $("#myCheck").show();
                 $("#TorneoRondas").prop('disabled', false);
-
+                 JuegoTorneo.PTorneo = 0;
             };
             $('#ResultadoTorneo').html(JuegoTorneo.resultadoT);
             $(".resultados").show();
@@ -221,10 +220,10 @@ $(document).ready(function(){
           $(".resultados").show();
           $('#Resultado').html(JuegoNormal.resultadoN);
     }
-
+    let TotalPartidas = (parseInt(JuegoNormal.PTotales) + parseInt(JuegoTorneo.PTotales));
     print(John.seleccion,Mac.seleccion);
     $('#Monedas').html('MONEDAS RESTANTES: ' + John.credito);
-    $("#PTotales").html('PARTIDAS JUGADAS: ' + JuegoNormal.PTotales );
+    $("#PTotales").html('PARTIDAS JUGADAS: ' + TotalPartidas );
   }
 
 
